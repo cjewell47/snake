@@ -1,3 +1,27 @@
 body {
   background: pink;
 }
+
+#grid {
+  height: 459px;
+  width: 459px;
+  margin: 0 auto;
+  background-color: white;
+}
+
+.cell {
+  margin: 0 -4px -4px 0;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  border: 1px solid white;
+}
+
+#snake {
+  background-color: black;
+}
+
+.wall {
+  background-color: pink;
+  border-color: pink;
+}
