@@ -14,15 +14,25 @@ $(init);
 
 function init() {
   buildGrid();
-  let direction = chooseRandomDirection();
-  let nextIndex = chooseRandomIndex();
+  let direction   = chooseRandomDirection();
+  let nextIndex   = chooseRandomIndex();
+  // if ($($('li')[nextIndex].hasClass('wall')) {
+  //   nextIndex   = chooseRandomIndex();
+  // }
   let $length = 750;
 
-  setInterval(() => {
+  const $movement = setInterval(() => {
     // Remove duplication
     const width      = 40;
     const $start     = $($('li')[nextIndex]);
 
+    if ($start.hasClass('snake')) {
+      clearInterval($movement);
+      clearInterval(food);
+      alert('You Died');
+      console.log('death');
+      $('li').removeClass('snake');
+    }
     $start.addClass('snake').delay($length).queue(function() {
       $(this).removeClass('snake').dequeue();
     });
@@ -30,6 +40,13 @@ function init() {
       $start.removeClass('food');
       $length = $length * 1.15;
       console.log('feed me');
+    }
+    if ($start.hasClass('wall')) {
+      clearInterval($movement);
+      clearInterval(food);
+      alert('You Died');
+      console.log('death');
+      $('li').removeClass('snake');
     }
 
     switch (direction) {
@@ -67,7 +84,7 @@ function init() {
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
   });
-  setInterval(() => {
+  const food = setInterval(() => {
     dropFood();
   }, 8000);
 }
@@ -80,6 +97,19 @@ function buildGrid() {
   $body.append($grid);
   for (let i = 0; i < width*width; i++) {
     $grid.append('<li></li>');
+  }
+  const $cell = $('li');
+  for (let i = 0; i < width; i++) {
+    $($cell[i]).addClass('wall');
+  }
+  for (let i = width*width - 1; i > width*width - 41; i--) {
+    $($cell[i]).addClass('wall');
+  }
+  for (let i = 0; i < width; i++) {
+    $($cell[i * 40]).addClass('wall');
+  }
+  for (let i = 0; i < width; i++) {
+    $($cell[(i * 40) - 1]).addClass('wall');
   }
 }
 
@@ -100,7 +130,7 @@ function dropFood() {
   $foodCell.addClass('food').delay(7000).queue(function() {
     $(this).removeClass('food').dequeue();
   });
-  if ($foodCell.hasClass('snake')) {
+  if ($foodCell.hasClass('snake') || $foodCell.hasClass('wall')) {
     foodIndex = Math.floor(Math.random() * gridArray.length);
     $foodCell = $($('li')[foodIndex]);
     console.log('snake');

@@ -57,3 +57,7 @@ ul.grid li {
 .snake {
   background: black;
 }
+
+.wall {
+  background: skyblue;
+}
