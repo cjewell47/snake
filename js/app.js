@@ -62,31 +62,34 @@
   //   e.preventDefault();
   // });
 
-  $(document).one('keyup', function(e) {
+  $(document).keyup(function(e) {
     if(e.which===13) {
-      console.log('sup');
+      console.log('hey');
       $('#grid').find('.cell.head')
       .animate({backgroundColor: '#000'}, '0.6')
       .animate({backgroundColor: '#fff'}, '1.2');
       setTimeout(notHead, 650);
-    //   setInterval(() => {
-    // //     // let rightColn = $('#grid').find('.cell.head').attr('data-col');
-    // //     // let rightCol = (rightColn + 1).toString();
-    // //     // let rightRown = $('#grid').find('.cell.head').attr('data-row');
-    // //     // let rightRow = (rightRown).toString();
-    // //     // $(`.cell[data-row=${rightRow}][data-col=${rightCol}]`)
-    // //     // .addClass('head')
-    // //     // .animate({backgroundColor: '#000'}, '0.6')
-    // //     // .animate({backgroundColor: '#fff'}, '1.2');
-    // //     // setTimeout(notHead, 600);
-    // //     var colNum = $('#grid').find('.cell.head').attr('data-col');
-    // //     var rowNum = $('#grid').find('.cell.head').attr('data-row');
-    // //     var prevCell = $(`.cell[data-row="${rowNum}"][data-col="${colNum}"]`);
-    // //     setTimeout(prevCell.addClass('head'), 200);
-    // //     prevCell.animate({backgroundColor: '#000'}, '0.6')
-    // //     .animate({backgroundColor: '#fff'}, '1.2');
-    // //     setTimeout(notHead, 800);
-    //   }, 600);
+      setInterval(function() {
+    //     // let rightColn = $('#grid').find('.cell.head').attr('data-col');
+    //     // let rightCol = (rightColn + 1).toString();
+    //     // let rightRown = $('#grid').find('.cell.head').attr('data-row');
+    //     // let rightRow = (rightRown).toString();
+    //     // $(`.cell[data-row=${rightRow}][data-col=${rightCol}]`)
+    //     // .addClass('head')
+    //     // .animate({backgroundColor: '#000'}, '0.6')
+    //     // .animate({backgroundColor: '#fff'}, '1.2');
+    //     // setTimeout(notHead, 600);
+        let colNum = $('#grid').find('.cell.head').attr('data-col');
+        let rowNum = $('#grid').find('.cell.head').attr('data-row');
+        // colNum = colNum.toString();
+        // rowNum = rowNum.toString();
+        // var prevCell = $(`.cell[data-row="${rowNum}"][data-col="${colNum}"]`);
+        let nextCell = $('#grid').find(`.cell[data-row="${rowNum}"][data-col="${colNum}+1"]`);
+        setTimeout(nextCell.addClass('head'), 600);
+        nextCell.animate({backgroundColor: '#000'}, '0.6')
+        .animate({backgroundColor: '#fff'}, '1.2');
+        setTimeout(notHead, 1200);
+      }, 1000);
 
       e.preventDefault();
     }
