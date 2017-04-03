@@ -11,9 +11,25 @@
 
 $(init);
 
+const $intro = $('<h2 class="intro">Press Enter to start!</h2>');
+const $death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
 
-function init() {
+function init(e) {
+  $('body').append($intro);
+  $(document).one('keyup', start);
+  if(e.which===13);
+}
+
+function death(e) {
+  $('body').append($death);
+  $(document).one('keyup', start);
+  if(e.which===13);
+}
+
+function start() {
   buildGrid();
+  $intro.remove();
+  $death.remove();
   // createScore();
   let direction   = chooseRandomDirection();
   let nextIndex   = chooseRandomIndex();
@@ -30,9 +46,10 @@ function init() {
     if ($start.hasClass('snake')) {
       clearInterval($movement);
       clearInterval(food);
-      alert('You Died');
       console.log('death');
       $('li').removeClass('snake');
+      $('.grid').remove();
+      death();
     }
     $start.addClass('snake').delay($length).queue(function() {
       $(this).removeClass('snake').dequeue();
@@ -46,9 +63,10 @@ function init() {
     if ($start.hasClass('wall')) {
       clearInterval($movement);
       clearInterval(food);
-      alert('You Died');
       console.log('death');
       $('li').removeClass('snake');
+      $('.grid').remove();
+      death();
     }
 
     switch (direction) {
