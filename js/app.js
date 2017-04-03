@@ -14,13 +14,14 @@ $(init);
 
 function init() {
   buildGrid();
+  // createScore();
   let direction   = chooseRandomDirection();
   let nextIndex   = chooseRandomIndex();
   // if ($($('li')[nextIndex].hasClass('wall')) {
   //   nextIndex   = chooseRandomIndex();
   // }
   let $length = 750;
-
+  let count = 1;
   const $movement = setInterval(() => {
     // Remove duplication
     const width      = 40;
@@ -40,6 +41,7 @@ function init() {
       $start.removeClass('food');
       $length = $length * 1.15;
       console.log('feed me');
+      $('.score').text(`Score: ${count++}`);
     }
     if ($start.hasClass('wall')) {
       clearInterval($movement);
@@ -134,8 +136,17 @@ function dropFood() {
     foodIndex = Math.floor(Math.random() * gridArray.length);
     $foodCell = $($('li')[foodIndex]);
     console.log('snake');
+    $foodCell.addClass('food').delay(7000).queue(function() {
+      $(this).removeClass('food').dequeue();
+    });
   } else {
     $foodCell.addClass('food');
     console.log('food yo');
   }
 }
+
+// function createScore() {
+//   const $body = $('body');
+//   const $score = $('');
+//   $body.append($score);
+// }

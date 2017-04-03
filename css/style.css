@@ -33,29 +33,32 @@ body {
 /* Could be dynamic */
 ul.grid {
   background: white;
-  width: 400px;
-  height: 400px;
+  width: 600px;
+  height: 600px;
   margin: 0 auto;
   padding: 0;
 }
 
 ul.grid li {
   box-sizing: border-box;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   float: left;
   list-style-type: none;
-  border: 1px solid grey;
+  border: 0;
   padding: 0;
   margin: 0;
 }
 
 .food {
   background: green;
+  border-radius: 50px;
 }
 
 .snake {
   background: black;
+  border-radius: 10px;
+  
 }
 
 .wall {
