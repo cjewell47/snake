@@ -50,6 +50,10 @@ ul.grid li {
   margin: 0;
 }
 
+.food {
+  background: green;
+}
+
 .snake {
   background: black;
 }

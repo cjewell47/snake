@@ -11,19 +11,26 @@
 
 $(init);
 
+
 function init() {
   buildGrid();
   let direction = chooseRandomDirection();
   let nextIndex = chooseRandomIndex();
+  let $length = 750;
 
   setInterval(() => {
     // Remove duplication
     const width      = 40;
     const $start     = $($('li')[nextIndex]);
 
-    $start.addClass('snake').delay(1000).queue(function() {
+    $start.addClass('snake').delay($length).queue(function() {
       $(this).removeClass('snake').dequeue();
     });
+    if ($start.hasClass('food')) {
+      $start.removeClass('food');
+      $length = $length * 1.15;
+      console.log('feed me');
+    }
 
     switch (direction) {
       case 'N':
@@ -39,7 +46,7 @@ function init() {
         nextIndex--;
         break;
     }
-  }, 1000);
+  }, 100);
 
   $(document).keydown(function(e) {
     console.log(e.which);
@@ -60,7 +67,11 @@ function init() {
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
   });
+  setInterval(() => {
+    dropFood();
+  }, 8000);
 }
+
 
 function buildGrid() {
   const $body = $('body');
@@ -80,4 +91,21 @@ function chooseRandomIndex() {
 function chooseRandomDirection() {
   const directions = ['N','E','S','W'];
   return directions[Math.floor(Math.random() * directions.length)];
+}
+
+function dropFood() {
+  const gridArray = $('li');
+  let foodIndex   = Math.floor(Math.random() * gridArray.length);
+  let $foodCell    = $($('li')[foodIndex]);
+  $foodCell.addClass('food').delay(7000).queue(function() {
+    $(this).removeClass('food').dequeue();
+  });
+  if ($foodCell.hasClass('snake')) {
+    foodIndex = Math.floor(Math.random() * gridArray.length);
+    $foodCell = $($('li')[foodIndex]);
+    console.log('snake');
+  } else {
+    $foodCell.addClass('food');
+    console.log('food yo');
+  }
 }
