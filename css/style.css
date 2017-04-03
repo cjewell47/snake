@@ -1,4 +1,4 @@
-body {
+/*body {
   background: pink;
 }
 
@@ -24,4 +24,32 @@ body {
 .wall {
   background-color: pink;
   border-color: pink;
+}*/
+
+body {
+  background: pink;
+}
+
+/* Could be dynamic */
+ul.grid {
+  background: white;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+ul.grid li {
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  float: left;
+  list-style-type: none;
+  border: 1px solid grey;
+  padding: 0;
+  margin: 0;
+}
+
+.snake {
+  background: black;
 }
