@@ -11,6 +11,15 @@
 
 $(init);
 
+const possibleDirections = {
+  N: 'S',
+  S: 'N',
+  E: 'W',
+  W: 'E'
+};
+
+let disabledDirection;
+
 const $intro = $('<h2 class="intro">Press Enter to start!</h2>');
 const $death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
 
@@ -47,6 +56,7 @@ function start() {
   $death.remove();
   $('.score').text(`Score: 0`);
   let direction    = chooseRandomDirection();
+  disabledDirection = possibleDirections[direction];
   let firstIndex   = chooseRandomIndex();
   let $length      = 750;
   let count        = 1;
@@ -90,36 +100,41 @@ function start() {
 
     switch (direction) {
       case 'N':
-      nextIndex = nextIndex - width;
-      break;
+        nextIndex = nextIndex - width;
+        break;
       case 'E':
-      nextIndex++;
-      break;
+        nextIndex++;
+        break;
       case 'S':
-      nextIndex = nextIndex + width;
-      break;
+        nextIndex = nextIndex + width;
+        break;
       case 'W':
-      nextIndex--;
-      break;
+        nextIndex--;
+        break;
     }
   }, 100);
 
-  $(document).keydown(function(e) {
-    console.log(e.which);
-    switch(e.which) {
-      case 37: // left
-      direction = 'W';
-      break;
-      case 38: // up
-      direction = 'N';
-      break;
-      case 39: // right
-      direction = 'E';
-      break;
-      case 40: // down
-      direction = 'S';
-      break;
-      default: return; // exit this handler for other keys
+  $(document).keydown(function turn (e) {
+    if (direction !== disabledDirection) {
+      switch(e.which) {
+        case 37: // left
+          direction = 'W';
+          disabledDirection = possibleDirections[direction];
+          break;
+        case 38: // up
+          direction = 'N';
+          disabledDirection = possibleDirections[direction];
+          break;
+        case 39: // right
+          direction = 'E';
+          disabledDirection = possibleDirections[direction];
+          break;
+        case 40: // down
+          direction = 'S';
+          disabledDirection = possibleDirections[direction];
+          break;
+        default: return; // exit this handler for other keys
+      }
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
   });
@@ -128,13 +143,10 @@ function start() {
   }, 8000);
 }
 
-// $('<div class="row"></div>')
-
 function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
   const width = 40;
-  // const $row   = $('<div class="row"></div>');
   let newId   = 1;
   $body.append($grid);
   for (let i = 0; i < width*width; i++) {
@@ -149,53 +161,10 @@ function buildGrid() {
       newId++;
     }
   }
-  // for (let i = 0; i < width; i++) {
-  //   $grid.append('<div class="row"></div>')
-  //   for (let i = 0; i < width; i++) {
-  //     $('.row').append('li')
-  //   }
-  // }
 }
 
-// for (let i = 0; i < width*width; i++) {
-//   if (i <= 159 || (i % 40 === (0 || 1 || 2 || 3)) || (i <= 1599 && i >= 1440) || i % 40 === (39 || 38 || 37 || 36)) {
-//     ($('li')[i]).addClass('noStart');
-//   }
-// }
-// for (let i = 0; i < width; i++) {
-//   $row.append($('li'));
-// }
-// const $cell = $('li');
-// for (let i = 0; i < width; i++) {
-//   $($cell[i]).addClass('wall');
-// }
-// for (let i = width*width - 1; i > width*width - (width + 1); i--) {
-//   $($cell[i]).addClass('wall');
-// }
-// for (let i = 0; i < width; i++) {
-//   $($cell[i * 40]).addClass('wall');
-// }
-// for (let i = 0; i < width; i++) {
-//   $($cell[(i * 40) - 1]).addClass('wall');
-// }
-// }
-
 function chooseRandomIndex() {
-  // const width = 40;
   const gridArray = $('li');
-  // const $cell = $('li');
-  // for (let i = 0; i < width*4; i++) {
-  //   $($cell[i]).addClass('noStart');
-  // }
-  // for (let i = width*width - 1; i > width*width - ((width*4) + 1); i--) {
-  //   $($cell[i]).addClass('noStart');
-  // }
-  // for (let i = 0; i < width*4; i++) {
-  //   $($cell[(i * 40) + i]).addClass('knoStart');
-  // }
-  // for (let i = 0; i < width*4; i++) {
-  //   $($cell[(i * 40) - 1]).addClass('knoStart');
-  // }
   return Math.floor(Math.random() * gridArray.length);
 }
 
