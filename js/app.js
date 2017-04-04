@@ -46,10 +46,17 @@ function start() {
   $intro.remove();
   $death.remove();
   $('.score').text(`Score: 0`);
-  let direction   = chooseRandomDirection();
-  let nextIndex   = chooseRandomIndex();
-  let $length = 750;
-  let count = 1;
+  let direction    = chooseRandomDirection();
+  let firstIndex   = chooseRandomIndex();
+  let $length      = 750;
+  let count        = 1;
+  let nextIndex;
+  while ($($('li')[firstIndex]).hasClass('border') || $($('li')[firstIndex]).hasClass('wall')) {
+    firstIndex     = chooseRandomIndex();
+  }
+  console.log($('li')[firstIndex]);
+  nextIndex = firstIndex;
+
   const $movement = setInterval(() => {
     // Remove duplication
     const width      = 40;
@@ -83,17 +90,17 @@ function start() {
 
     switch (direction) {
       case 'N':
-        nextIndex = nextIndex - width;
-        break;
+      nextIndex = nextIndex - width;
+      break;
       case 'E':
-        nextIndex++;
-        break;
+      nextIndex++;
+      break;
       case 'S':
-        nextIndex = nextIndex + width;
-        break;
+      nextIndex = nextIndex + width;
+      break;
       case 'W':
-        nextIndex--;
-        break;
+      nextIndex--;
+      break;
     }
   }, 100);
 
@@ -101,17 +108,17 @@ function start() {
     console.log(e.which);
     switch(e.which) {
       case 37: // left
-        direction = 'W';
-        break;
+      direction = 'W';
+      break;
       case 38: // up
-        direction = 'N';
-        break;
+      direction = 'N';
+      break;
       case 39: // right
-        direction = 'E';
-        break;
+      direction = 'E';
+      break;
       case 40: // down
-        direction = 'S';
-        break;
+      direction = 'S';
+      break;
       default: return; // exit this handler for other keys
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
@@ -127,30 +134,51 @@ function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
   const width = 40;
+  // const $row   = $('<div class="row"></div>');
   let newId   = 1;
   $body.append($grid);
   for (let i = 0; i < width*width; i++) {
-    if (i <= 39 || i % 40 === 0 || (i <= 1599 && i >= 1560) || i % 40 === 39) {
+    if (i < 40 || i % 40 === 0 || i > 1560 || i % 40 === 39) {
       $grid.append(`<li id="${newId}" class="wall"></li>`);
+      newId++;
+    } else if (i <= 159 || i % 40 < 4 || (i > 1440) || i % 40 > 35) {
+      $grid.append(`<li id="${newId}" class="border"></li>`);
       newId++;
     } else {
       $grid.append(`<li id="${newId}"></li>`);
+      newId++;
     }
   }
-  // const $cell = $('li');
   // for (let i = 0; i < width; i++) {
-  //   $($cell[i]).addClass('wall');
-  // }
-  // for (let i = width*width - 1; i > width*width - (width + 1); i--) {
-  //   $($cell[i]).addClass('wall');
-  // }
-  // for (let i = 0; i < width; i++) {
-  //   $($cell[i * 40]).addClass('wall');
-  // }
-  // for (let i = 0; i < width; i++) {
-  //   $($cell[(i * 40) - 1]).addClass('wall');
+  //   $grid.append('<div class="row"></div>')
+  //   for (let i = 0; i < width; i++) {
+  //     $('.row').append('li')
+  //   }
   // }
 }
+
+// for (let i = 0; i < width*width; i++) {
+//   if (i <= 159 || (i % 40 === (0 || 1 || 2 || 3)) || (i <= 1599 && i >= 1440) || i % 40 === (39 || 38 || 37 || 36)) {
+//     ($('li')[i]).addClass('noStart');
+//   }
+// }
+// for (let i = 0; i < width; i++) {
+//   $row.append($('li'));
+// }
+// const $cell = $('li');
+// for (let i = 0; i < width; i++) {
+//   $($cell[i]).addClass('wall');
+// }
+// for (let i = width*width - 1; i > width*width - (width + 1); i--) {
+//   $($cell[i]).addClass('wall');
+// }
+// for (let i = 0; i < width; i++) {
+//   $($cell[i * 40]).addClass('wall');
+// }
+// for (let i = 0; i < width; i++) {
+//   $($cell[(i * 40) - 1]).addClass('wall');
+// }
+// }
 
 function chooseRandomIndex() {
   // const width = 40;
@@ -195,9 +223,3 @@ function dropFood() {
     console.log('food yo');
   }
 }
-
-// function createScore() {
-//   const $body = $('body');
-//   const $score = $('');
-//   $body.append($score);
-// }
