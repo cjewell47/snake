@@ -75,3 +75,11 @@ ul.grid li {
 .wall {
   background: skyblue;
 }
+
+.noStart {
+  background: orange;
+}
+
+.knoStart {
+  background: red;
+}

@@ -14,28 +14,40 @@ $(init);
 const $intro = $('<h2 class="intro">Press Enter to start!</h2>');
 const $death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
 
-function init(e) {
+
+function init() {
   $('body').append($intro);
-  $(document).one('keyup', start);
-  if(e.which===13);
+  $(document).keyup((e) => {
+    e.preventDefault();
+    if(e.which===13) {
+      start();
+      $(document).off('keyup');
+    } else {
+      return false;
+    }
+  });
 }
 
-function death(e) {
+function death() {
   $('body').append($death);
-  $(document).one('keyup', start);
-  if(e.which===13);
+  $(document).keyup((e) => {
+    e.preventDefault();
+    if(e.which===13) {
+      start();
+      $(document).off('keyup');
+    } else {
+      return false;
+    }
+  });
 }
 
 function start() {
   buildGrid();
   $intro.remove();
   $death.remove();
-  // createScore();
+  $('.score').text(`Score: 0`);
   let direction   = chooseRandomDirection();
   let nextIndex   = chooseRandomIndex();
-  // if ($($('li')[nextIndex].hasClass('wall')) {
-  //   nextIndex   = chooseRandomIndex();
-  // }
   let $length = 750;
   let count = 1;
   const $movement = setInterval(() => {
@@ -109,32 +121,53 @@ function start() {
   }, 8000);
 }
 
+// $('<div class="row"></div>')
 
 function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
   const width = 40;
+  let newId   = 1;
   $body.append($grid);
   for (let i = 0; i < width*width; i++) {
-    $grid.append('<li></li>');
+    if (i <= 39 || i % 40 === 0 || (i <= 1599 && i >= 1560) || i % 40 === 39) {
+      $grid.append(`<li id="${newId}" class="wall"></li>`);
+      newId++;
+    } else {
+      $grid.append(`<li id="${newId}"></li>`);
+    }
   }
-  const $cell = $('li');
-  for (let i = 0; i < width; i++) {
-    $($cell[i]).addClass('wall');
-  }
-  for (let i = width*width - 1; i > width*width - 41; i--) {
-    $($cell[i]).addClass('wall');
-  }
-  for (let i = 0; i < width; i++) {
-    $($cell[i * 40]).addClass('wall');
-  }
-  for (let i = 0; i < width; i++) {
-    $($cell[(i * 40) - 1]).addClass('wall');
-  }
+  // const $cell = $('li');
+  // for (let i = 0; i < width; i++) {
+  //   $($cell[i]).addClass('wall');
+  // }
+  // for (let i = width*width - 1; i > width*width - (width + 1); i--) {
+  //   $($cell[i]).addClass('wall');
+  // }
+  // for (let i = 0; i < width; i++) {
+  //   $($cell[i * 40]).addClass('wall');
+  // }
+  // for (let i = 0; i < width; i++) {
+  //   $($cell[(i * 40) - 1]).addClass('wall');
+  // }
 }
 
 function chooseRandomIndex() {
+  // const width = 40;
   const gridArray = $('li');
+  // const $cell = $('li');
+  // for (let i = 0; i < width*4; i++) {
+  //   $($cell[i]).addClass('noStart');
+  // }
+  // for (let i = width*width - 1; i > width*width - ((width*4) + 1); i--) {
+  //   $($cell[i]).addClass('noStart');
+  // }
+  // for (let i = 0; i < width*4; i++) {
+  //   $($cell[(i * 40) + i]).addClass('knoStart');
+  // }
+  // for (let i = 0; i < width*4; i++) {
+  //   $($cell[(i * 40) - 1]).addClass('knoStart');
+  // }
   return Math.floor(Math.random() * gridArray.length);
 }
 
