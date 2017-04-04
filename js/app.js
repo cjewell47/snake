@@ -61,11 +61,16 @@ function start() {
   let $length      = 750;
   let count        = 1;
   let nextIndex;
+
   while ($($('li')[firstIndex]).hasClass('border') || $($('li')[firstIndex]).hasClass('wall')) {
     firstIndex     = chooseRandomIndex();
   }
   console.log($('li')[firstIndex]);
   nextIndex = firstIndex;
+
+  const food = setInterval(() => {
+    dropFood();
+  }, 8000);
 
   const $movement = setInterval(() => {
     // Remove duplication
@@ -75,24 +80,25 @@ function start() {
     if ($start.hasClass('snake')) {
       clearInterval($movement);
       clearInterval(food);
-      console.log('death');
       $('li').removeClass('snake');
       $('.grid').remove();
       death();
     }
+
     $start.addClass('snake').delay($length).queue(function() {
       $(this).removeClass('snake').dequeue();
     });
+
     if ($start.hasClass('food')) {
       $start.removeClass('food');
       $length = $length * 1.15;
-      console.log('feed me');
       $('.score').text(`Score: ${count++}`);
     }
+
     if ($start.hasClass('wall')) {
       clearInterval($movement);
       clearInterval(food);
-      console.log('death');
+      // console.log('death');
       $('li').removeClass('snake');
       $('.grid').remove();
       death();
@@ -138,9 +144,6 @@ function start() {
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
   });
-  const food = setInterval(() => {
-    dropFood();
-  }, 8000);
 }
 
 function buildGrid() {
@@ -176,19 +179,19 @@ function chooseRandomDirection() {
 function dropFood() {
   const gridArray = $('li');
   let foodIndex   = Math.floor(Math.random() * gridArray.length);
-  let $foodCell    = $($('li')[foodIndex]);
-  $foodCell.addClass('food').delay(7000).queue(function() {
-    $(this).removeClass('food').dequeue();
-  });
-  if ($foodCell.hasClass('snake') || $foodCell.hasClass('wall')) {
+  let $foodCell   = $($('li')[foodIndex]);
+
+  while ($foodCell.hasClass('snake') || $foodCell.hasClass('wall')) {
     foodIndex = Math.floor(Math.random() * gridArray.length);
     $foodCell = $($('li')[foodIndex]);
-    console.log('snake');
-    $foodCell.addClass('food').delay(7000).queue(function() {
-      $(this).removeClass('food').dequeue();
-    });
-  } else {
-    $foodCell.addClass('food');
-    console.log('food yo');
   }
+
+  // $foodCell.addClass('food').delay(7000).queue(function() {
+  //   $(this).removeClass('food').dequeue();
+  // });
+
+  $foodCell.addClass('food');
+  setTimeout(() => {
+    if ($foodCell.hasClass('food')) $foodCell.removeClass('food');
+  }, 7000);
 }
