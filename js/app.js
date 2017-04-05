@@ -11,21 +11,12 @@
 
 var game = game || {};
 
-// it goes back on itself and dies in the first game.
-
 game.possibleDirections = {
   N: 'S',
   S: 'N',
   E: 'W',
   W: 'E'
 };
-
-// game.possibleKeys = {
-//   N: [37, 38, 39],
-//   S: [37, 39, 40],
-//   E: [38, 39, 40],
-//   W: [37, 38, 40]
-// };
 
 game.disabledDirection;
 game.foodDur = 7000;
@@ -179,18 +170,14 @@ game.start = function start() {
 game.buildGrid = function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
-  // let newId   = 1;
   $body.append($grid);
   for (let i = 0; i < this.width*this.width; i++) {
     if (i < 40 || i % 40 === 0 || i > 1560 || i % 40 === 39) {
       $grid.append(`<li class="wall"></li>`);
-      // newId++;
     } else if (i <= 159 || i % 40 < 4 || (i > 1440) || i % 40 > 35) {
       $grid.append(`<li class="border"></li>`);
-      // newId++;
     } else {
       $grid.append(`<li></li>`);
-      // newId++;
     }
   }
 };
