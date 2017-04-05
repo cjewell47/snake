@@ -16,7 +16,7 @@ body {
   text-align: center;
   color: white;
   size: 32px;
-  top: 50%;
+  top: 600px;
   text-decoration: blink;
 	-webkit-animation-name: blinker;
 	-webkit-animation-duration: 0.6s;
@@ -48,6 +48,7 @@ ul.grid {
   height: 600px;
   margin: 0 auto;
   padding: 0;
+  margin-bottom: 40px;
 }
 
 ul.grid li {
@@ -69,9 +70,9 @@ ul.grid li {
 .snake {
   background: black;
   border-radius: 10px;
-
 }
 
 .wall {
+  /*background-image: url("../wall.png");*/
   background: skyblue;
 }

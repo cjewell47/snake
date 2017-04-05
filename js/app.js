@@ -9,82 +9,97 @@
 
 // cells have a background color on a timer that fades out.
 
-$(init);
+var game = game || {};
 
-// it goes back on itself and does in the first game.
+// it goes back on itself and dies in the first game.
 
-const possibleDirections = {
+game.possibleDirections = {
   N: 'S',
   S: 'N',
   E: 'W',
   W: 'E'
 };
 
-let disabledDirection;
-// let direction;
+// game.possibleKeys = {
+//   N: [37, 38, 39],
+//   S: [37, 39, 40],
+//   E: [38, 39, 40],
+//   W: [37, 38, 40]
+// };
 
-const $intro = $('<h2 class="intro">Press Enter to start!</h2>');
-const $death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
-const width = 40;
+game.disabledDirection;
+game.foodDur = 7000;
+game.foodDropDur = 8000;
+game.direction;
 
-function init() {
-  $('body').append($intro);
+game.$intro = $('<h2 class="intro">Press Enter to start!</h2>');
+game.$death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
+game.width = 40;
+
+game.init = function init() {
+  $('body').append(this.$intro);
   $(document).keyup((e) => {
     e.preventDefault();
     if(e.which===13) {
-      start();
+      this.start();
       $(document).off('keyup');
     } else {
       return false;
     }
   });
-}
+};
 
-function death() {
-  $('body').append($death);
+game.death = function death() {
+  $('body').append(this.$death);
   $(document).keyup((e) => {
     e.preventDefault();
     if(e.which===13) {
-      start();
+      this.start();
       $(document).off('keyup');
     } else {
       return false;
     }
   });
-}
+};
 
-function start() {
-  buildGrid();
-  $intro.remove();
-  $death.remove();
+game.start = function start() {
+  this.buildGrid();
+  this.$intro.remove();
+  this.$death.remove();
   $('.score').text(`Score: 0`);
-  let direction     = chooseRandomDirection();
-  disabledDirection = possibleDirections[direction];
-  let firstIndex    = chooseRandomIndex();
-  let $length       = 750;
+  game.direction         = this.chooseRandomDirection();
+  game.disabledDirection = this.possibleDirections[game.direction];
+  let firstIndex    = this.chooseRandomIndex();
+  let $length       = 400;
   let count         = 1;
   let nextIndex;
 
   while ($($('li')[firstIndex]).hasClass('border') || $($('li')[firstIndex]).hasClass('wall')) {
-    firstIndex = chooseRandomIndex();
+    firstIndex = this.chooseRandomIndex();
   }
   nextIndex = firstIndex;
 
+  if (count > 15) {
+    this.foodDur = 5000;
+    this.foodDropDur = 6000;
+  } else if (count > 25) {
+    this.foodDur = 3500;
+    this.foodDropDur = 4500;
+  } else if (count > 35) {
+    this.foodDur = 3000;
+    this.foodDropDur = 4000;
+  }
+
   const food = setInterval(() => {
-    dropFood();
-  }, 8000);
+    this.dropFood();
+  }, this.foodDropDur);
 
   const $movement = setInterval(() => {
     // Remove duplication
-    // const width      = 40;
     const $start     = $($('li')[nextIndex]);
 
     if ($start.hasClass('snake')) {
-      clearInterval($movement);
-      clearInterval(food);
-      $('li').removeClass('snake');
-      $('.grid').remove();
-      death();
+      this.die();
     }
 
     $start.addClass('snake').delay($length).queue(function() {
@@ -92,104 +107,117 @@ function start() {
     });
 
     if ($start.hasClass('food')) {
-      $start.removeClass('food');
-      $('.score').text(`Score: ${count++}`);
-      $length = $length * (1 + (100/$length));
+      game.eat();
     }
 
     if ($start.hasClass('wall')) {
-      clearInterval($movement);
-      clearInterval(food);
-      // console.log('death');
-      $('li').removeClass('snake');
-      $('.grid').remove();
-      death();
+      game.die();
     }
 
-    $(document).keydown(turn);
+    $(document).keydown(game.turn.bind(game));
 
-    switch (direction) {
+    switch (game.direction) {
       case 'N':
-        nextIndex = nextIndex - width;
+        nextIndex = nextIndex - this.width;
         break;
       case 'E':
         nextIndex++;
         break;
       case 'S':
-        nextIndex = nextIndex + width;
+        nextIndex = nextIndex + this.width;
         break;
       case 'W':
         nextIndex--;
         break;
     }
+
+    this.eat = function eat() {
+      // $start.removeClass('food');
+      game.$foodCell.removeClass('food');
+      $('.score').text(`Score: ${count++}`);
+      $length = $length * (1 + (100/$length));
+    };
+
+    this.die = function die() {
+      clearInterval($movement);
+      clearInterval(food);
+      $('li').removeClass('snake');
+      $('.grid').remove();
+      this.death();
+    };
   }, 100);
 
-  function turn(e) {
-    if (direction !== disabledDirection) {
-      switch(e.which) {
-        case 37: // left
-          direction = 'W';
-          disabledDirection = possibleDirections[direction];
-          break;
-        case 38: // up
-          direction = 'N';
-          disabledDirection = possibleDirections[direction];
-          break;
-        case 39: // right
-          direction = 'E';
-          disabledDirection = possibleDirections[direction];
-          break;
-        case 40: // down
-          direction = 'S';
-          disabledDirection = possibleDirections[direction];
-          break;
-        default: return; // exit this handler for other keys
-      }
+  this.turn = function turn(e) {
+    let newDirection;
+    switch(e.which) {
+      case 37: // left
+        newDirection = 'W';
+        break;
+      case 38: // up
+        newDirection = 'N';
+        break;
+      case 39: // right
+        newDirection = 'E';
+        break;
+      case 40: // down
+        newDirection = 'S';
+        break;
+      default: return; // exit this handler for other keys
     }
-    e.preventDefault(); // prevent the default action (scroll / move caret)
-  }
-}
 
-function buildGrid() {
+    if (newDirection === game.disabledDirection) {
+      return;
+    } else {
+      game.direction = newDirection;
+      game.disabledDirection = this.possibleDirections[newDirection];
+    }
+
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+  };
+};
+
+game.buildGrid = function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
-  let newId   = 1;
+  // let newId   = 1;
   $body.append($grid);
-  for (let i = 0; i < width*width; i++) {
+  for (let i = 0; i < this.width*this.width; i++) {
     if (i < 40 || i % 40 === 0 || i > 1560 || i % 40 === 39) {
-      $grid.append(`<li id="${newId}" class="wall"></li>`);
-      newId++;
+      $grid.append(`<li class="wall"></li>`);
+      // newId++;
     } else if (i <= 159 || i % 40 < 4 || (i > 1440) || i % 40 > 35) {
-      $grid.append(`<li id="${newId}" class="border"></li>`);
-      newId++;
+      $grid.append(`<li class="border"></li>`);
+      // newId++;
     } else {
-      $grid.append(`<li id="${newId}"></li>`);
-      newId++;
+      $grid.append(`<li></li>`);
+      // newId++;
     }
   }
-}
+};
 
-function chooseRandomIndex() {
+game.chooseRandomIndex = function chooseRandomIndex() {
   const gridArray = $('li');
   return Math.floor(Math.random() * gridArray.length);
-}
+};
 
-function chooseRandomDirection() {
+game.chooseRandomDirection = function chooseRandomDirection() {
   const directions = ['N','E','S','W'];
   return directions[Math.floor(Math.random() * directions.length)];
-}
+};
 
-function dropFood() {
+game.dropFood = function dropFood() {
   const gridArray = $('li');
-  let foodIndex   = Math.floor(Math.random() * gridArray.length);
-  let $foodCell   = $($('li')[foodIndex]);
+  game.foodIndex   = Math.floor(Math.random() * gridArray.length);
+  game.$foodCell   = $($('li')[game.foodIndex]);
 
-  while ($foodCell.hasClass('snake') || $foodCell.hasClass('wall')) {
-    foodIndex = Math.floor(Math.random() * gridArray.length);
-    $foodCell = $($('li')[foodIndex]);
+  while (game.$foodCell.hasClass('snake') || game.$foodCell.hasClass('wall')) {
+    game.foodIndex = Math.floor(Math.random() * gridArray.length);
+    game.$foodCell = $($('li')[game.foodIndex]);
   }
-  $foodCell.addClass('food');
+  game.$foodCell.addClass('food');
   setTimeout(() => {
-    if ($foodCell.hasClass('food')) $foodCell.removeClass('food');
-  }, 7000);
-}
+    if (game.$foodCell.hasClass('food')) game.$foodCell.removeClass('food');
+  }, this.foodDur);
+};
+
+$(game.init.bind(game));
