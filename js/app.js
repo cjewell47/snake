@@ -11,6 +11,8 @@
 
 $(init);
 
+// it goes back on itself and does in the first game.
+
 const possibleDirections = {
   N: 'S',
   S: 'N',
@@ -19,10 +21,11 @@ const possibleDirections = {
 };
 
 let disabledDirection;
+// let direction;
 
 const $intro = $('<h2 class="intro">Press Enter to start!</h2>');
 const $death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
-
+const width = 40;
 
 function init() {
   $('body').append($intro);
@@ -55,17 +58,16 @@ function start() {
   $intro.remove();
   $death.remove();
   $('.score').text(`Score: 0`);
-  let direction    = chooseRandomDirection();
+  let direction     = chooseRandomDirection();
   disabledDirection = possibleDirections[direction];
-  let firstIndex   = chooseRandomIndex();
-  let $length      = 750;
-  let count        = 1;
+  let firstIndex    = chooseRandomIndex();
+  let $length       = 750;
+  let count         = 1;
   let nextIndex;
 
   while ($($('li')[firstIndex]).hasClass('border') || $($('li')[firstIndex]).hasClass('wall')) {
-    firstIndex     = chooseRandomIndex();
+    firstIndex = chooseRandomIndex();
   }
-  console.log($('li')[firstIndex]);
   nextIndex = firstIndex;
 
   const food = setInterval(() => {
@@ -74,7 +76,7 @@ function start() {
 
   const $movement = setInterval(() => {
     // Remove duplication
-    const width      = 40;
+    // const width      = 40;
     const $start     = $($('li')[nextIndex]);
 
     if ($start.hasClass('snake')) {
@@ -91,8 +93,8 @@ function start() {
 
     if ($start.hasClass('food')) {
       $start.removeClass('food');
-      $length = $length * 1.15;
       $('.score').text(`Score: ${count++}`);
+      $length = $length * (1 + (100/$length));
     }
 
     if ($start.hasClass('wall')) {
@@ -103,6 +105,8 @@ function start() {
       $('.grid').remove();
       death();
     }
+
+    $(document).keydown(turn);
 
     switch (direction) {
       case 'N':
@@ -120,7 +124,7 @@ function start() {
     }
   }, 100);
 
-  $(document).keydown(function turn (e) {
+  function turn(e) {
     if (direction !== disabledDirection) {
       switch(e.which) {
         case 37: // left
@@ -143,13 +147,12 @@ function start() {
       }
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
-  });
+  }
 }
 
 function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
-  const width = 40;
   let newId   = 1;
   $body.append($grid);
   for (let i = 0; i < width*width; i++) {
@@ -185,11 +188,6 @@ function dropFood() {
     foodIndex = Math.floor(Math.random() * gridArray.length);
     $foodCell = $($('li')[foodIndex]);
   }
-
-  // $foodCell.addClass('food').delay(7000).queue(function() {
-  //   $(this).removeClass('food').dequeue();
-  // });
-
   $foodCell.addClass('food');
   setTimeout(() => {
     if ($foodCell.hasClass('food')) $foodCell.removeClass('food');
