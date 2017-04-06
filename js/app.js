@@ -10,14 +10,16 @@ game.possibleDirections = {
 
 game.disabledDirection;
 game.direction;
-game.$intro = $('<h2 class="intro">Select your difficulty to start!</h2>');
-game.$death = $('<h2 class="intro">You died! Select your difficulty to restart!</h2>');
+game.$intro = $('<h2 class="intro">Select your speed to start!</h2>');
+game.$death = $('<h2 class="intro">You died! Select your speed to restart!</h2>');
 game.width = 40;
+game.menu;
+game.next;
 
 
 game.init = function init() {
   $('body').append(this.$intro);
-  this.selectDifficulty();
+  this.selectSpeed();
 };
 
 game.start = function start() {
@@ -50,7 +52,7 @@ game.start = function start() {
       this.die();
     }
 
-    $start.addClass('snake').delay(this.$length).queue(function() {
+    $start.addClass('snake').delay(this.length).queue(function() {
       $(this).removeClass('snake').dequeue();
     });
 
@@ -82,7 +84,7 @@ game.start = function start() {
     this.eat = function eat() {
       this.$foodCell.removeClass('food');
       $('.score').text(`Score: ${count++}`);
-      this.$length = this.$length * (1 + (this.speed/this.$length));
+      this.length = this.length * (1 + (this.speed/this.length));
     };
 
     this.die = function die() {
@@ -125,7 +127,7 @@ game.start = function start() {
 
 game.death = function death() {
   $('body').append(this.$death);
-  this.selectDifficulty();
+  this.selectSpeed();
 };
 
 game.buildGrid = function buildGrid() {
@@ -175,68 +177,74 @@ game.dropFood = function dropFood() {
   }, this.foodDur);
 };
 
-game.selectDifficulty = function selectDifficulty() {
+game.selectSpeed = function selectSpeed() {
   this.buildMenu();
   $('body').append(this.$menu);
-  const menu = $('.menu_box');
+  this.menu = $('.menu_box');
   this.menuSelected;
-  $(document).keydown((e) => {
-    if(e.which === 40) {
-      e.preventDefault();
-      if(this.menuSelected) {
-        this.menuSelected.removeClass('selected');
-        const next = this.menuSelected.next();
-        if(next.length > 0){
-          this.menuSelected = next.addClass('selected');
-        } else {
-          this.menuSelected = menu.eq(0).addClass('selected');
-        }
-      } else {
-        this.menuSelected = menu.eq(0).addClass('selected');
-      }
-    } else if(e.which === 38) {
-      e.preventDefault();
-      if(this.menuSelected) {
-        this.menuSelected.removeClass('selected');
-        const next = this.menuSelected.prev();
-        if(next.length > 0) {
-          this.menuSelected = next.addClass('selected');
-        } else {
-          this.menuSelected = menu.last().addClass('selected');
-        }
-      } else {
-        this.menuSelected = menu.last().addClass('selected');
-      }
-    } else if (e.which === 13) {
-      e.preventDefault();
-      $('.menu_box').each(() => {
-        if ($('.selected').is('#slow')) {
-          this.speed = 200;
-          this.$length = 800;
-          this.foodDur = 14000;
-          this.foodDropDur = 18000;
-          this.start();
-          $(document).off('keydown');
-        } else if ($('.selected').is('#medium')) {
-          this.speed = 100;
-          this.$length = 400;
-          this.foodDur = 7000;
-          this.foodDropDur = 8000;
-          this.start();
-          $(document).off('keydown');
-        } else if ($('.selected').is('#fast')) {
-          this.speed = 50;
-          this.$length = 200;
-          this.foodDur = 3500;
-          this.foodDropDur = 4000;
-          this.start();
-          $(document).off('keydown');
-        } else {
-          return;
-        }
-      });
-    }
-  });
+  $(document).keydown(this.menuKey.bind(game));
+};
+
+game.menuKey = function menuKey(e) {
+  if(e.which === 40) {
+    this.downKey(e).bind(game);
+  } else if(e.which === 38) {
+    this.upKey(e).bind(game);
+  } else if (e.which === 13) {
+    e.preventDefault();
+    $('.menu_box').each(this.setSpeed());
+  }
+};
+
+game.setSpeed = function setSpeed() {
+  if ($('.selected').is('#slow')) {
+    this.speed = 200;
+    this.length = 800;
+    this.foodDur = 14000;
+    this.foodDropDur = 18000;
+    this.start();
+    $(document).off('keydown');
+  } else if ($('.selected').is('#medium')) {
+    this.speed = 100;
+    this.length = 400;
+    this.foodDur = 7000;
+    this.foodDropDur = 8000;
+    this.start();
+    $(document).off('keydown');
+  } else if ($('.selected').is('#fast')) {
+    this.speed = 50;
+    this.length = 200;
+    this.foodDur = 3500;
+    this.foodDropDur = 4000;
+    this.start();
+    $(document).off('keydown');
+  } else {
+    return;
+  }
+};
+
+game.downKey = function downKey(e) {
+  e.preventDefault();
+  if(this.menuSelected) {
+    this.menuSelected.removeClass('selected');
+    this.next = this.menuSelected.next();
+
+    this.next.length > 0 ? this.menuSelected = this.next.addClass('selected') : this.menuSelected = this.menu.eq(0).addClass('selected');
+  } else {
+    this.menuSelected = this.menu.eq(0).addClass('selected');
+  }
+};
+
+game.upKey = function upKey(e) {
+  e.preventDefault();
+  if(this.menuSelected) {
+    this.menuSelected.removeClass('selected');
+    this.next = this.menuSelected.prev();
+
+    this.next.length > 0 ? this.menuSelected = this.next.addClass('selected') : this.menuSelected = this.menu.last().addClass('selected');
+  } else {
+    this.menuSelected = this.menu.last().addClass('selected');
+  }
 };
 
 $(game.init.bind(game));
