@@ -20,11 +20,6 @@ game.init = function init() {
   this.selectDifficulty();
 };
 
-game.death = function death() {
-  $('body').append(this.$death);
-  this.selectDifficulty();
-};
-
 game.start = function start() {
   this.buildGrid();
   this.$intro.remove();
@@ -128,6 +123,11 @@ game.start = function start() {
   };
 };
 
+game.death = function death() {
+  $('body').append(this.$death);
+  this.selectDifficulty();
+};
+
 game.buildGrid = function buildGrid() {
   const $body = $('body');
   const $grid = $('<ul class="grid"></ul>');
@@ -180,7 +180,6 @@ game.selectDifficulty = function selectDifficulty() {
   $('body').append(this.$menu);
   const menu = $('.menu_box');
   this.menuSelected;
-
   $(document).keydown((e) => {
     if(e.which === 40) {
       e.preventDefault();
