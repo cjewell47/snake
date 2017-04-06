@@ -30,16 +30,18 @@ h1 {
   size: 28px;
   text-align: center;
   color: white;
-  top: 20px;margin-bottom: 10px;
+  top: 20px;
+  margin-bottom: 40px;
 }
 
 .score {
   color: white;
   text-align: center;
-  size: 16px;
+  size: 22px;
   margin-top: 0;
   margin-bottom: 20px;
   font-family: 'Varela Round', sans-serif;
+  display: none;
 }
 
 ul.grid {

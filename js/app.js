@@ -1,13 +1,3 @@
-// The snake moves at an interval of 0.3 seconds, in one direction until another arrow key is pressed.
-
-// The game ends and the interval timer stops when the snake hits the edge, this is achieved as the border are 'cells' in the grid and if the snake head enters these cells, movement stops and the game ends.
-// When the snake hits the food block, the tail of the snake passes over it and now the block becomes the tail. The snake is an array of cells, and once the tail of the snake passes the array is lengthened.
-
-// Corners? When an arrow key is pressed and the snake turns the head turns and the body follows as the redirection lasts for as many intervals as the length ofthe snake.
-
-//Hitting itself? when snake from a direction other than the one it is moving from, then the interval timer stops and the game ends.
-
-// cells have a background color on a timer that fades out.
 
 var game = game || {};
 
@@ -19,251 +9,20 @@ game.possibleDirections = {
 };
 
 game.disabledDirection;
-// game.foodDur;
-// game.foodDropDur;
 game.direction;
-// game.menuBoxIndex = -1;
 game.$intro = $('<h2 class="intro">Select your difficulty to start!</h2>');
 game.$death = $('<h2 class="intro">You died! Select your difficulty to restart!</h2>');
 game.width = 40;
-// game.speed;
-// game.$length;
+
 
 game.init = function init() {
   $('body').append(this.$intro);
-  this.buildMenu();
-  $('body').append(this.$menu);
-  const menu = $('.menu_box');
-  this.menuSelected;
-
-  $(document).keyup((e) => {
-    if(e.which === 40) {
-      if(this.menuSelected) {
-        console.log('this.menuSelect', this.menuSelected);
-        this.menuSelected.removeClass('selected');
-        const next = this.menuSelected.next();
-        if(next.length > 0){
-          this.menuSelected = next.addClass('selected');
-        } else {
-          this.menuSelected = menu.eq(0).addClass('selected');
-        }
-      } else {
-        this.menuSelected = menu.eq(0).addClass('selected');
-      }
-    } else if(e.which === 38) {
-      console.log('this.menuSelect', this.menuSelected);
-      if(this.menuSelected) {
-        this.menuSelected.removeClass('selected');
-        const next = this.menuSelected.prev();
-        if(next.length > 0) {
-          this.menuSelected = next.addClass('selected');
-        } else {
-          this.menuSelected = menu.last().addClass('selected');
-        }
-      } else {
-        this.menuSelected = menu.last().addClass('selected');
-      }
-    } else if (e.which === 13) {
-      e.preventDefault();
-      $('.menu_box').each(() => {
-        if ($('.selected').is('#slow')) {
-          this.speed = 200;
-          this.$length = 800;
-          game.foodDur = 14000;
-          game.foodDropDur = 18000;
-          this.start();
-          $(document).off('keyup');
-        } else if ($('.selected').is('#medium')) {
-          this.speed = 100;
-          this.$length = 400;
-          game.foodDur = 7000;
-          game.foodDropDur = 8000;
-          this.start();
-          $(document).off('keyup');
-        } else if ($('.selected').is('#fast')) {
-          this.speed = 50;
-          this.$length = 200;
-          game.foodDur = 3500;
-          game.foodDropDur = 4000;
-          this.start();
-          $(document).off('keyup');
-        } else {
-          return;
-        }
-      });
-    }
-  });
-  // $(document).keyup((e) => {
-  //   (e.which === 13);
-  //   e.preventDefault();
-  //   switch($('.selected')) {
-  //     case $('#slow.selected'):
-  //       this.speed = 200;
-  //       this.$length = 800;
-  //       game.foodDur = 14000;
-  //       game.foodDropDur = 18000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     case ('#medium.selected'):
-  //       this.speed = 100;
-  //       this.$length = 400;
-  //       game.foodDur = 7000;
-  //       game.foodDropDur = 8000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     case ('#fast.selected'):
-  //       this.speed = 50;
-  //       this.$length = 200;
-  //       game.foodDur = 3500;
-  //       game.foodDropDur = 4000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     default: return;
-  //   }
-
-
-
-
-  // $('#search').keyup(function(e) {
-  //   if(e.keyCode === 40) {
-  //     this.navigate(1);
-  //   }
-  //   if(e.keyCode===38) {
-  //     this.navigate(-1);
-  //   }
-  // });
-
-
-
-  // $(document).keyup((e) => {
-  //   e.preventDefault();
-  //   switch(e.which) {
-  //     case 65:
-  //       this.speed = 200;
-  //       this.$length = 800;
-  //       game.foodDur = 14000;
-  //       game.foodDropDur = 18000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     case 66:
-  //       this.speed = 100;
-  //       this.$length = 400;
-  //       game.foodDur = 7000;
-  //       game.foodDropDur = 8000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     case 67:
-  //       this.speed = 50;
-  //       this.$length = 200;
-  //       game.foodDur = 3500;
-  //       game.foodDropDur = 4000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     default: return;
-  //   }
-  // });
+  this.selectDifficulty();
 };
 
 game.death = function death() {
   $('body').append(this.$death);
-  this.buildMenu();
-  $('body').append(this.$menu);
-  const menu = $('.menu_box');
-  this.menuSelected;
-
-  $(document).keyup((e) => {
-    if(e.which === 40) {
-      if(this.menuSelected) {
-        console.log('this.menuSelect', this.menuSelected);
-        this.menuSelected.removeClass('selected');
-        const next = this.menuSelected.next();
-        if(next.length > 0){
-          this.menuSelected = next.addClass('selected');
-        } else {
-          this.menuSelected = menu.eq(0).addClass('selected');
-        }
-      } else {
-        this.menuSelected = menu.eq(0).addClass('selected');
-      }
-    } else if(e.which === 38) {
-      console.log('this.menuSelect', this.menuSelected);
-      if(this.menuSelected) {
-        this.menuSelected.removeClass('selected');
-        const next = this.menuSelected.prev();
-        if(next.length > 0) {
-          this.menuSelected = next.addClass('selected');
-        } else {
-          this.menuSelected = menu.last().addClass('selected');
-        }
-      } else {
-        this.menuSelected = menu.last().addClass('selected');
-      }
-    } else if (e.which === 13) {
-      e.preventDefault();
-      $('.menu_box').each(() => {
-        if ($('.selected').is('#slow')) {
-          this.speed = 200;
-          this.$length = 800;
-          game.foodDur = 14000;
-          game.foodDropDur = 18000;
-          this.start();
-          $(document).off('keyup');
-        } else if ($('.selected').is('#medium')) {
-          this.speed = 100;
-          this.$length = 400;
-          game.foodDur = 7000;
-          game.foodDropDur = 8000;
-          this.start();
-          $(document).off('keyup');
-        } else if ($('.selected').is('#fast')) {
-          this.speed = 50;
-          this.$length = 200;
-          game.foodDur = 3500;
-          game.foodDropDur = 4000;
-          this.start();
-          $(document).off('keyup');
-        } else {
-          return;
-        }
-      });
-    }
-  });
-  // $(document).keyup((e) => {
-  //   e.preventDefault();
-  //   switch(e.which) {
-  //     case 65:
-  //       this.speed = 200;
-  //       this.$length = 800;
-  //       game.foodDur = 14000;
-  //       game.foodDropDur = 18000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     case 66:
-  //       this.speed = 100;
-  //       this.$length = 400;
-  //       game.foodDur = 7000;
-  //       game.foodDropDur = 8000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     case 67:
-  //       this.speed = 50;
-  //       this.$length = 200;
-  //       game.foodDur = 3500;
-  //       game.foodDropDur = 4000;
-  //       this.start();
-  //       $(document).off('keyup');
-  //       break;
-  //     default: return;
-  //   }
-  // });
+  this.selectDifficulty();
 };
 
 game.start = function start() {
@@ -271,9 +30,11 @@ game.start = function start() {
   this.$intro.remove();
   this.$death.remove();
   this.$menu.remove();
+  $('.score').css({'display': 'block'});
   $('.score').text(`Score: 0`);
-  game.direction         = this.chooseRandomDirection();
-  game.disabledDirection = this.possibleDirections[game.direction];
+  $('h1').css({'margin-bottom': '10px'});
+  this.direction         = this.chooseRandomDirection();
+  this.disabledDirection = this.possibleDirections[this.direction];
   let firstIndex    = this.chooseRandomIndex();
   let count         = 1;
   let nextIndex;
@@ -283,30 +44,12 @@ game.start = function start() {
   }
   nextIndex = firstIndex;
 
-  // if (count > 15) {
-  //   this.foodDur = this.foodDur * 0.85;
-  //   this.foodDropDur = this.foodDropDur * 85;
-  // } else if (count > 25) {
-  //   this.foodDur = this.foodDur * 0.85;
-  //   this.foodDropDur = this.foodDropDur * 85;
-  // } else if (count > 35) {
-  //   this.foodDur = this.foodDur * 0.85;
-  //   this.foodDropDur = this.foodDropDur * 85;
-  // }
-
   const food = setInterval(() => {
     this.dropFood();
   }, this.foodDropDur);
 
   const $movement = setInterval(() => {
-    // Remove duplication
     const $start     = $($('li')[nextIndex]);
-
-    console.log('speed', this.speed);
-    console.log('length', this.$length);
-    // console.log('drop', this.foodDur );
-    // console.log('drop int', this.foodDropDur);
-
 
     if ($start.hasClass('snake')) {
       this.die();
@@ -324,9 +67,9 @@ game.start = function start() {
       this.die();
     }
 
-    $(document).keydown(game.turn.bind(game));
+    $(document).keydown(this.turn.bind(game));
 
-    switch (game.direction) {
+    switch (this.direction) {
       case 'N':
         nextIndex = nextIndex - this.width;
         break;
@@ -342,8 +85,7 @@ game.start = function start() {
     }
 
     this.eat = function eat() {
-      // $start.removeClass('food');
-      game.$foodCell.removeClass('food');
+      this.$foodCell.removeClass('food');
       $('.score').text(`Score: ${count++}`);
       this.$length = this.$length * (1 + (this.speed/this.$length));
     };
@@ -402,7 +144,6 @@ game.buildGrid = function buildGrid() {
 };
 
 game.buildMenu = function buildMenu() {
-  // this.$input = $('<input type="submit" id="search" />');
   this.$menu = $('<div id="menu"></div>');
   this.$menu.append('<div id="slow" class="menu_box">Slow</div>');
   this.$menu.append('<div id="medium" class="menu_box">Medium</div>');
@@ -434,17 +175,69 @@ game.dropFood = function dropFood() {
   }, this.foodDur);
 };
 
-// game.navigate = function navigate(diff) {
-//   this.menuBoxIndex += diff;
-//   const menuBoxes = $('.menu_box');
-//   if (this.menuBoxIndex >= menuBoxes.length) {
-//     this.menuBoxIndex = 0;
-//   }
-//   if (this.menuBoxIndex < 0) {
-//     this.menuBoxIndex = menuBoxes.length - 1;
-//   }
-//   const cssClass = 'menu_box_hover';
-//   menuBoxes.removeClass(cssClass).eq(this.menuBoxIndex).addClass(cssClass);
-// };
+game.selectDifficulty = function selectDifficulty() {
+  this.buildMenu();
+  $('body').append(this.$menu);
+  const menu = $('.menu_box');
+  this.menuSelected;
+
+  $(document).keydown((e) => {
+    if(e.which === 40) {
+      e.preventDefault();
+      if(this.menuSelected) {
+        this.menuSelected.removeClass('selected');
+        const next = this.menuSelected.next();
+        if(next.length > 0){
+          this.menuSelected = next.addClass('selected');
+        } else {
+          this.menuSelected = menu.eq(0).addClass('selected');
+        }
+      } else {
+        this.menuSelected = menu.eq(0).addClass('selected');
+      }
+    } else if(e.which === 38) {
+      e.preventDefault();
+      if(this.menuSelected) {
+        this.menuSelected.removeClass('selected');
+        const next = this.menuSelected.prev();
+        if(next.length > 0) {
+          this.menuSelected = next.addClass('selected');
+        } else {
+          this.menuSelected = menu.last().addClass('selected');
+        }
+      } else {
+        this.menuSelected = menu.last().addClass('selected');
+      }
+    } else if (e.which === 13) {
+      e.preventDefault();
+      $('.menu_box').each(() => {
+        if ($('.selected').is('#slow')) {
+          this.speed = 200;
+          this.$length = 800;
+          this.foodDur = 14000;
+          this.foodDropDur = 18000;
+          this.start();
+          $(document).off('keydown');
+        } else if ($('.selected').is('#medium')) {
+          this.speed = 100;
+          this.$length = 400;
+          this.foodDur = 7000;
+          this.foodDropDur = 8000;
+          this.start();
+          $(document).off('keydown');
+        } else if ($('.selected').is('#fast')) {
+          this.speed = 50;
+          this.$length = 200;
+          this.foodDur = 3500;
+          this.foodDropDur = 4000;
+          this.start();
+          $(document).off('keydown');
+        } else {
+          return;
+        }
+      });
+    }
+  });
+};
 
 $(game.init.bind(game));
