@@ -62,7 +62,7 @@ ul.grid li {
 }
 
 .food {
-  background: green;
+  background: #1d54ad;
   border-radius: 50px;
 }
 
@@ -74,4 +74,28 @@ ul.grid li {
 .wall {
   /*background-image: url("../wall.png");*/
   background: skyblue;
+}
+
+#menu {
+  display: block;
+  height: 500px;
+  width: 500px;
+  margin: auto;
+}
+.menu_box {
+  padding: 20px;
+  border: 5px solid white;
+  background: pink;
+  font-family: 'Press Start 2P', cursive;
+  size: 28px;
+  text-align: center;
+  color: white;
+  margin: 30px;
+  display: block;
+}
+
+.menu_box.selected {
+  background: white;
+  color: black;
+  border: 5px solid skyblue;
 }

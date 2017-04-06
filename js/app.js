@@ -19,49 +19,262 @@ game.possibleDirections = {
 };
 
 game.disabledDirection;
-game.foodDur = 7000;
-game.foodDropDur = 8000;
+// game.foodDur;
+// game.foodDropDur;
 game.direction;
-
-game.$intro = $('<h2 class="intro">Press Enter to start!</h2>');
-game.$death = $('<h2 class="intro">You died! press Enter to restart!</h2>');
+// game.menuBoxIndex = -1;
+game.$intro = $('<h2 class="intro">Select your difficulty to start!</h2>');
+game.$death = $('<h2 class="intro">You died! Select your difficulty to restart!</h2>');
 game.width = 40;
+// game.speed;
+// game.$length;
 
 game.init = function init() {
   $('body').append(this.$intro);
+  this.buildMenu();
+  $('body').append(this.$menu);
+  const menu = $('.menu_box');
+  this.menuSelected;
+
   $(document).keyup((e) => {
-    e.preventDefault();
-    if(e.which===13) {
-      this.start();
-      $(document).off('keyup');
-    } else {
-      return false;
+    if(e.which === 40) {
+      if(this.menuSelected) {
+        console.log('this.menuSelect', this.menuSelected);
+        this.menuSelected.removeClass('selected');
+        const next = this.menuSelected.next();
+        if(next.length > 0){
+          this.menuSelected = next.addClass('selected');
+        } else {
+          this.menuSelected = menu.eq(0).addClass('selected');
+        }
+      } else {
+        this.menuSelected = menu.eq(0).addClass('selected');
+      }
+    } else if(e.which === 38) {
+      console.log('this.menuSelect', this.menuSelected);
+      if(this.menuSelected) {
+        this.menuSelected.removeClass('selected');
+        const next = this.menuSelected.prev();
+        if(next.length > 0) {
+          this.menuSelected = next.addClass('selected');
+        } else {
+          this.menuSelected = menu.last().addClass('selected');
+        }
+      } else {
+        this.menuSelected = menu.last().addClass('selected');
+      }
+    } else if (e.which === 13) {
+      e.preventDefault();
+      $('.menu_box').each(() => {
+        if ($('.selected').is('#slow')) {
+          this.speed = 200;
+          this.$length = 800;
+          game.foodDur = 14000;
+          game.foodDropDur = 18000;
+          this.start();
+          $(document).off('keyup');
+        } else if ($('.selected').is('#medium')) {
+          this.speed = 100;
+          this.$length = 400;
+          game.foodDur = 7000;
+          game.foodDropDur = 8000;
+          this.start();
+          $(document).off('keyup');
+        } else if ($('.selected').is('#fast')) {
+          this.speed = 50;
+          this.$length = 200;
+          game.foodDur = 3500;
+          game.foodDropDur = 4000;
+          this.start();
+          $(document).off('keyup');
+        } else {
+          return;
+        }
+      });
     }
   });
+  // $(document).keyup((e) => {
+  //   (e.which === 13);
+  //   e.preventDefault();
+  //   switch($('.selected')) {
+  //     case $('#slow.selected'):
+  //       this.speed = 200;
+  //       this.$length = 800;
+  //       game.foodDur = 14000;
+  //       game.foodDropDur = 18000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     case ('#medium.selected'):
+  //       this.speed = 100;
+  //       this.$length = 400;
+  //       game.foodDur = 7000;
+  //       game.foodDropDur = 8000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     case ('#fast.selected'):
+  //       this.speed = 50;
+  //       this.$length = 200;
+  //       game.foodDur = 3500;
+  //       game.foodDropDur = 4000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     default: return;
+  //   }
+
+
+
+
+  // $('#search').keyup(function(e) {
+  //   if(e.keyCode === 40) {
+  //     this.navigate(1);
+  //   }
+  //   if(e.keyCode===38) {
+  //     this.navigate(-1);
+  //   }
+  // });
+
+
+
+  // $(document).keyup((e) => {
+  //   e.preventDefault();
+  //   switch(e.which) {
+  //     case 65:
+  //       this.speed = 200;
+  //       this.$length = 800;
+  //       game.foodDur = 14000;
+  //       game.foodDropDur = 18000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     case 66:
+  //       this.speed = 100;
+  //       this.$length = 400;
+  //       game.foodDur = 7000;
+  //       game.foodDropDur = 8000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     case 67:
+  //       this.speed = 50;
+  //       this.$length = 200;
+  //       game.foodDur = 3500;
+  //       game.foodDropDur = 4000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     default: return;
+  //   }
+  // });
 };
 
 game.death = function death() {
   $('body').append(this.$death);
+  this.buildMenu();
+  $('body').append(this.$menu);
+  const menu = $('.menu_box');
+  this.menuSelected;
+
   $(document).keyup((e) => {
-    e.preventDefault();
-    if(e.which===13) {
-      this.start();
-      $(document).off('keyup');
-    } else {
-      return false;
+    if(e.which === 40) {
+      if(this.menuSelected) {
+        console.log('this.menuSelect', this.menuSelected);
+        this.menuSelected.removeClass('selected');
+        const next = this.menuSelected.next();
+        if(next.length > 0){
+          this.menuSelected = next.addClass('selected');
+        } else {
+          this.menuSelected = menu.eq(0).addClass('selected');
+        }
+      } else {
+        this.menuSelected = menu.eq(0).addClass('selected');
+      }
+    } else if(e.which === 38) {
+      console.log('this.menuSelect', this.menuSelected);
+      if(this.menuSelected) {
+        this.menuSelected.removeClass('selected');
+        const next = this.menuSelected.prev();
+        if(next.length > 0) {
+          this.menuSelected = next.addClass('selected');
+        } else {
+          this.menuSelected = menu.last().addClass('selected');
+        }
+      } else {
+        this.menuSelected = menu.last().addClass('selected');
+      }
+    } else if (e.which === 13) {
+      e.preventDefault();
+      $('.menu_box').each(() => {
+        if ($('.selected').is('#slow')) {
+          this.speed = 200;
+          this.$length = 800;
+          game.foodDur = 14000;
+          game.foodDropDur = 18000;
+          this.start();
+          $(document).off('keyup');
+        } else if ($('.selected').is('#medium')) {
+          this.speed = 100;
+          this.$length = 400;
+          game.foodDur = 7000;
+          game.foodDropDur = 8000;
+          this.start();
+          $(document).off('keyup');
+        } else if ($('.selected').is('#fast')) {
+          this.speed = 50;
+          this.$length = 200;
+          game.foodDur = 3500;
+          game.foodDropDur = 4000;
+          this.start();
+          $(document).off('keyup');
+        } else {
+          return;
+        }
+      });
     }
   });
+  // $(document).keyup((e) => {
+  //   e.preventDefault();
+  //   switch(e.which) {
+  //     case 65:
+  //       this.speed = 200;
+  //       this.$length = 800;
+  //       game.foodDur = 14000;
+  //       game.foodDropDur = 18000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     case 66:
+  //       this.speed = 100;
+  //       this.$length = 400;
+  //       game.foodDur = 7000;
+  //       game.foodDropDur = 8000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     case 67:
+  //       this.speed = 50;
+  //       this.$length = 200;
+  //       game.foodDur = 3500;
+  //       game.foodDropDur = 4000;
+  //       this.start();
+  //       $(document).off('keyup');
+  //       break;
+  //     default: return;
+  //   }
+  // });
 };
 
 game.start = function start() {
   this.buildGrid();
   this.$intro.remove();
   this.$death.remove();
+  this.$menu.remove();
   $('.score').text(`Score: 0`);
   game.direction         = this.chooseRandomDirection();
   game.disabledDirection = this.possibleDirections[game.direction];
   let firstIndex    = this.chooseRandomIndex();
-  let $length       = 400;
   let count         = 1;
   let nextIndex;
 
@@ -70,16 +283,16 @@ game.start = function start() {
   }
   nextIndex = firstIndex;
 
-  if (count > 15) {
-    this.foodDur = 5000;
-    this.foodDropDur = 6000;
-  } else if (count > 25) {
-    this.foodDur = 3500;
-    this.foodDropDur = 4500;
-  } else if (count > 35) {
-    this.foodDur = 3000;
-    this.foodDropDur = 4000;
-  }
+  // if (count > 15) {
+  //   this.foodDur = this.foodDur * 0.85;
+  //   this.foodDropDur = this.foodDropDur * 85;
+  // } else if (count > 25) {
+  //   this.foodDur = this.foodDur * 0.85;
+  //   this.foodDropDur = this.foodDropDur * 85;
+  // } else if (count > 35) {
+  //   this.foodDur = this.foodDur * 0.85;
+  //   this.foodDropDur = this.foodDropDur * 85;
+  // }
 
   const food = setInterval(() => {
     this.dropFood();
@@ -89,20 +302,26 @@ game.start = function start() {
     // Remove duplication
     const $start     = $($('li')[nextIndex]);
 
+    console.log('speed', this.speed);
+    console.log('length', this.$length);
+    // console.log('drop', this.foodDur );
+    // console.log('drop int', this.foodDropDur);
+
+
     if ($start.hasClass('snake')) {
       this.die();
     }
 
-    $start.addClass('snake').delay($length).queue(function() {
+    $start.addClass('snake').delay(this.$length).queue(function() {
       $(this).removeClass('snake').dequeue();
     });
 
     if ($start.hasClass('food')) {
-      game.eat();
+      this.eat();
     }
 
     if ($start.hasClass('wall')) {
-      game.die();
+      this.die();
     }
 
     $(document).keydown(game.turn.bind(game));
@@ -126,7 +345,7 @@ game.start = function start() {
       // $start.removeClass('food');
       game.$foodCell.removeClass('food');
       $('.score').text(`Score: ${count++}`);
-      $length = $length * (1 + (100/$length));
+      this.$length = this.$length * (1 + (this.speed/this.$length));
     };
 
     this.die = function die() {
@@ -136,7 +355,7 @@ game.start = function start() {
       $('.grid').remove();
       this.death();
     };
-  }, 100);
+  }, this.speed);
 
   this.turn = function turn(e) {
     let newDirection;
@@ -156,11 +375,11 @@ game.start = function start() {
       default: return; // exit this handler for other keys
     }
 
-    if (newDirection === game.disabledDirection) {
+    if (newDirection === this.disabledDirection) {
       return;
     } else {
-      game.direction = newDirection;
-      game.disabledDirection = this.possibleDirections[newDirection];
+      this.direction = newDirection;
+      this.disabledDirection = this.possibleDirections[newDirection];
     }
 
     e.preventDefault(); // prevent the default action (scroll / move caret)
@@ -174,12 +393,20 @@ game.buildGrid = function buildGrid() {
   for (let i = 0; i < this.width*this.width; i++) {
     if (i < 40 || i % 40 === 0 || i > 1560 || i % 40 === 39) {
       $grid.append(`<li class="wall"></li>`);
-    } else if (i <= 159 || i % 40 < 4 || (i > 1440) || i % 40 > 35) {
+    } else if (i <= 239 || i % 40 < 6 || (i > 1360) || i % 40 > 33) {
       $grid.append(`<li class="border"></li>`);
     } else {
       $grid.append(`<li></li>`);
     }
   }
+};
+
+game.buildMenu = function buildMenu() {
+  // this.$input = $('<input type="submit" id="search" />');
+  this.$menu = $('<div id="menu"></div>');
+  this.$menu.append('<div id="slow" class="menu_box">Slow</div>');
+  this.$menu.append('<div id="medium" class="menu_box">Medium</div>');
+  this.$menu.append('<div id="fast" class="menu_box">Fast</div>');
 };
 
 game.chooseRandomIndex = function chooseRandomIndex() {
@@ -194,17 +421,30 @@ game.chooseRandomDirection = function chooseRandomDirection() {
 
 game.dropFood = function dropFood() {
   const gridArray = $('li');
-  game.foodIndex   = Math.floor(Math.random() * gridArray.length);
-  game.$foodCell   = $($('li')[game.foodIndex]);
+  this.foodIndex   = Math.floor(Math.random() * gridArray.length);
+  this.$foodCell   = $($('li')[this.foodIndex]);
 
-  while (game.$foodCell.hasClass('snake') || game.$foodCell.hasClass('wall')) {
-    game.foodIndex = Math.floor(Math.random() * gridArray.length);
-    game.$foodCell = $($('li')[game.foodIndex]);
+  while (this.$foodCell.hasClass('snake') || this.$foodCell.hasClass('wall')) {
+    this.foodIndex = Math.floor(Math.random() * gridArray.length);
+    this.$foodCell = $($('li')[this.foodIndex]);
   }
-  game.$foodCell.addClass('food');
+  this.$foodCell.addClass('food');
   setTimeout(() => {
-    if (game.$foodCell.hasClass('food')) game.$foodCell.removeClass('food');
+    if (this.$foodCell.hasClass('food')) this.$foodCell.removeClass('food');
   }, this.foodDur);
 };
+
+// game.navigate = function navigate(diff) {
+//   this.menuBoxIndex += diff;
+//   const menuBoxes = $('.menu_box');
+//   if (this.menuBoxIndex >= menuBoxes.length) {
+//     this.menuBoxIndex = 0;
+//   }
+//   if (this.menuBoxIndex < 0) {
+//     this.menuBoxIndex = menuBoxes.length - 1;
+//   }
+//   const cssClass = 'menu_box_hover';
+//   menuBoxes.removeClass(cssClass).eq(this.menuBoxIndex).addClass(cssClass);
+// };
 
 $(game.init.bind(game));
