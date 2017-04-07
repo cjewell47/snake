@@ -94,6 +94,7 @@ game.start = function start() {
       $('.grid').remove();
       this.death();
     };
+
   }, this.speed);
 
   this.turn = function turn(e) {
