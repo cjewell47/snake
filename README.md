@@ -114,11 +114,11 @@ this.turn = function turn(e) {
 ```
 One issue encountered here was preventing the snake from turning into itself i.e. if the snake was travelling left then it should not be able to turn right, as it would collide with itself and die.
 
-This was tackled by creating a **disabledDirection** variable that was assigned to the direction opposite that in which the snake was moving. If the **newDirection** was equal to the **disabledDirection** then the **newDirection** was not assigned to **direction**.
+This was tackled by creating a **disabledDirection** variable that was assigned to the opposite direction in which the snake was moving. If the **newDirection** was equal to the **disabledDirection** then the **newDirection** was not assigned to **direction**.
 
 ### Dying
 
-Death was achieved by invoking the die whenever the nextIndex list item (that is the cell in which the snake is entering) has a class of snake or wall.
+Death was achieved by invoking the die function whenever the nextIndex list item (that is the cell in which the snake is entering) has a class of snake or wall.
 
 ```js
 this.die = function die() {
